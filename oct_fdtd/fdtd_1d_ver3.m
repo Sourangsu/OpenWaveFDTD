@@ -1,29 +1,40 @@
-%% code for 1D FDTD (in free space-PML boundary condition)
+%% code for 1D FDTD (pulse hitting a dielectric medium)
 %% workspace definition
 close all;
 clear all;
 clc;
 
 MaX = 200;                                                                 %number of cells to be used
+
 Ex_low_m1 = 0;
 Ex_low_m2 = 0;
 Ex_high_m1 = 0;
 Ex_high_m2 = 0;
+eps = 4;
+kStart = 100;
 kc = MaX/2;                                                                %center of the problem space
 to = 40;                                                                   %center of the incident pulse
 spread = 12;                                                               %width of the incident pulse
 T = 0;
 Nsteps = 1;
 
-
 %%field definition
 Ex = zeros(1,MaX);                                                         %electric field
 Hy = zeros(1,MaX);                                                         %magnetic field
+cB = zeros(1,MaX);                                                         %magnetic field
 
 
 for k = 1:MaX
     Ex(k) = 0;
     Hy(k) = 0;
+end
+
+for k = 1:MaX
+    cB(k) = 0.5;
+end
+
+for k = kStart:MaX
+    cB(k) = 0.5/eps;
 end
 
 
@@ -36,12 +47,12 @@ while (Nsteps > 0)
         
         %calculate the Ex field
         for k = 2:MaX
-            Ex(k) = Ex(k) + 0.5*(Hy(k-1)-Hy(k));
+            Ex(k) = Ex(k) + cB(k)*(Hy(k-1)-Hy(k));
         end
             
         %put gaussian pulse in the middle
         pulse =  exp(-0.5*((to-T)/spread)^2);
-        Ex(kc) = Ex(kc)+pulse;
+        Ex(5) = Ex(5)+pulse;
         %fprintf('%f %f \n',(to-T),Ex(kc));
         
         %%PML boundary condition

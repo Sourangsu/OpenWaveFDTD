@@ -4,7 +4,12 @@ close all;
 clear all;
 clc;
 
-MaX = 200;
+MaX = 200;                                                                 %number of cells to be used
+kc = MaX/2;                                                                %center of the problem space
+to = 40;                                                                   %center of the incident pulse
+spread = 12;                                                               %width of the incident pulse
+T = 0;
+Nsteps = 1;
 
 %%field definition
 Ex = zeros(1,MaX);                                                         %electric field
@@ -16,18 +21,12 @@ for k = 1:MaX
     Hy(k) = 0;
 end
 
-kc = MaX/2;                                                                %center of the problem space
-to = 40;                                                                   %center of the incident pulse
-spread = 12;                                                               %width of the incident pulse
-T = 0;
-Nsteps = 1;
 
 while (Nsteps > 0)
     n = 0;
     
-    for n = 1:Nsteps
-        T =T+1;
-        
+    for n = 1:Nsteps                                                       %Nsteps is the number of times the main loop has executed
+        T =T+1;                                                            %T keeps track of the timesteps
         %main fdtd loop
         
         %calculate the Ex field
