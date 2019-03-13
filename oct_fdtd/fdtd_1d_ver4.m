@@ -1,4 +1,4 @@
-%% code for 1D FDTD (pulse hitting a dielectric medium-pml boundary condition)
+%% code for 1D FDTD (sinusoidal pulse hitting a dielectric medium-pml boundary condition)
 %% workspace definition
 close all;
 clear all;
@@ -19,6 +19,9 @@ T = 0;
 Nsteps = 1;
 def_structure = [zeros(1,100),ones(1,100)];
 grid_cells = linspace(1,200,200);
+ddx = 0.01;
+dt = ddx/(2*3e8);
+freq_in = 700*1e6;
 
 
 %%field definition
@@ -54,7 +57,7 @@ while (Nsteps > 0)
         end
             
         %put gaussian pulse in the middle
-        pulse =  exp(-0.5*((to-T)/spread)^2);
+        pulse =  sin(2*pi*freq_in*dt*T);
         Ex(5) = Ex(5)+pulse;
         %fprintf('%f %f \n',(to-T),Ex(kc));
         

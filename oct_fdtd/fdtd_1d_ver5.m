@@ -1,4 +1,4 @@
-%% code for 1D FDTD (pulse hitting a dielectric medium-pml boundary condition)
+%% code for 1D FDTD (sinusoidal pulse hitting a lossy dielectric medium-pml boundary condition)
 %% workspace definition
 close all;
 clear all;
@@ -11,6 +11,8 @@ Ex_low_m2 = 0;
 Ex_high_m1 = 0;
 Ex_high_m2 = 0;
 eps = 4;
+epsz = 8.85419e-12;
+sig = 0.04;
 kStart = 100;
 kc = MaX/2;                                                                %center of the problem space
 to = 40;                                                                   %center of the incident pulse
@@ -19,12 +21,17 @@ T = 0;
 Nsteps = 1;
 def_structure = [zeros(1,100),ones(1,100)];
 grid_cells = linspace(1,200,200);
+ddx = 0.01;
+dt = ddx/(2*3e8);
+freq_in = 700*1e6;
+
 
 
 %%field definition
 Ex = zeros(1,MaX);                                                         %electric field
 Hy = zeros(1,MaX);                                                         %magnetic field
-cB = zeros(1,MaX);                                                         
+cB = zeros(1,MaX); 
+cA = zeros(1,MaX);                                                         
 
 
 for k = 1:MaX
@@ -33,10 +40,14 @@ for k = 1:MaX
 end
 
 for k = 1:MaX
+    cA(k) = 1;
     cB(k) = 0.5;
 end
 
+eaF = dt*sig/(2*epsz*eps);
+
 for k = kStart:MaX
+    cA(k) = (1-eaF)/(1+eaF);
     cB(k) = 0.5/eps;
 end
 
@@ -50,11 +61,11 @@ while (Nsteps > 0)
         
         %calculate the Ex field
         for k = 2:MaX
-            Ex(k) = Ex(k) + cB(k)*(Hy(k-1)-Hy(k));
+            Ex(k) = cA(k)*Ex(k) + cB(k)*(Hy(k-1)-Hy(k));
         end
             
         %put gaussian pulse in the middle
-        pulse =  exp(-0.5*((to-T)/spread)^2);
+        pulse =  sin(2*pi*freq_in*dt*T);
         Ex(5) = Ex(5)+pulse;
         %fprintf('%f %f \n',(to-T),Ex(kc));
         
