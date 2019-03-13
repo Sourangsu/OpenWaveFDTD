@@ -1,10 +1,14 @@
-%% code for 1D FDTD (in free space)
+%% code for 1D FDTD (in free space-PML boundary condition)
 %% workspace definition
 close all;
 clear all;
 clc;
 
 MaX = 200;
+Ex_low_m1 = 0;
+Ex_low_m2 = 0;
+Ex_high_m1 = 0;
+Ex_high_m2 = 0;
 
 %%field definition
 Ex = zeros(1,MaX);                                                         %electric field
@@ -23,7 +27,6 @@ T = 0;
 Nsteps = 1;
 
 while (Nsteps > 0)
-    %fprintf('Nsteps -----> %d \n',Nsteps);
     n = 0;
     
     for n = 1:Nsteps
@@ -38,8 +41,17 @@ while (Nsteps > 0)
             
         %put gaussian pulse in the middle
         pulse =  exp(-0.5*((to-T)/spread)^2);
-        Ex(kc) = pulse;
+        Ex(kc) = Ex(kc)+pulse;
         %fprintf('%f %f \n',(to-T),Ex(kc));
+        
+        %%PML boundary condition
+        Ex(1) = Ex_low_m2;
+        Ex_low_m2 = Ex_low_m1;
+        Ex_low_m1 = Ex(2);
+        
+        Ex(MaX-1) = Ex_high_m2;
+        Ex_high_m2 = Ex_high_m1;
+        Ex_high_m1 = Ex(MaX-2);
             
         %calculate the Hy field
         for k = 1:MaX-1
@@ -47,8 +59,14 @@ while (Nsteps > 0)
         end
     end
     
+    subplot(2,1,1);
     plot(Ex);
-    pause(0.5);
+    xlabel('FDTD cells');
+    ylabel('Ex');
+    subplot(2,1,2);
+    plot(Hy);
+    xlabel('FDTD cells');
+    ylabel('Hy');
+    pause(0.2);
     fprintf('Timestep = %f \n',T);
 end
-
