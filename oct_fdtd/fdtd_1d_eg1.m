@@ -1,5 +1,5 @@
 %% ========================================================================
-% Written by: Sourangsu Banerji, University of Utah, March 2019 
+% Written by: Sourangsu Banerji, University of Utah 
 % Verified by: Manjunath Machnoor, University of Southern California
 %% ========================================================================
 

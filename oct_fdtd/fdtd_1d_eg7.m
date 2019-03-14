@@ -1,9 +1,10 @@
 %% ========================================================================
-% Written by: Sourangsu Banerji, University of Utah
+% Written by: Sourangsu Banerji, University of Utah 
 % Verified by: Manjunath Machnoor, University of Southern California
 %% ========================================================================
 
 %% code for 1D FDTD (sinusoidal pulse hitting a lossy dielectric medium-pml boundary condition-using electric flux density)
+%% Fourier transform to calculate amplitude and phase
 %% workspace definition
 close all;
 clear all;
@@ -21,9 +22,10 @@ sig = 0.04;                                                                %cond
 pi = 3.14159;
 kStart = 100;                                                              %start of the structure
 to = 50;                                                                   %center of the incident pulse
-spread = 20;                                                               %width of the incident pulse
+spread = 10;                                                               %width of the incident pulse
 ddx = 0.01;                                                                %spatial sampling
 dt = ddx/(2*3e8);                                                          %temporal interval (could be derived from courant stability factor)
+freq_in = [100,200,500]*1e6;                                               %frequency of the excitation pulse
 pulse_start_grid_point = 5;                                                %grid point of the excitation pulse
 
 %structure definition
@@ -52,7 +54,27 @@ for k = 1:MaX
     Dx(k) = 0;
     Hy(k) = 0;
     Ix(k) = 0;
+    mag(k) = 0;
+    
+    for m = 1:3
+        real_pt(m,k) = 0;
+        imag_pt(m,k) = 0;
+        ampn(m,k) = 0;
+        phasen(m,k) = 0;
+    end
+    
 end
+
+%fourier transform of the input pulse
+for m = 1:3
+    real_in(m) = 0;
+    imag_in(m) = 0;
+end
+
+for m = 1:3
+    arg(m) = 2*pi*dt*freq_in(m);
+end
+
 
 
 for k = kStart:MaX
@@ -84,6 +106,21 @@ while (Nsteps > 0)
             Ix(k) = Ix(k)+(Gb(k)*Ex(k));
         end
         
+        %calculate the fourier transform of Ex
+        for k = 1:MaX
+            for m = 1:3
+                real_pt(m,k) = real_pt(m,k) + cos(arg(m)*T)*Ex(k);
+                imag_pt(m,k) = imag_pt(m,k) - sin(arg(m)*T)*Ex(k);
+            end
+        end
+        
+        if T < 100
+           for m = 1:3
+                real_in(m) = real_in(m) + cos(arg(m)*T)*Ex(10);
+                imag_in(m) = imag_in(m) - sin(arg(m)*T)*Ex(10);
+            end
+        end  
+        
         %PML boundary condition
         Ex(1) = Ex_low_m2;
         Ex_low_m2 = Ex_low_m1;
@@ -99,14 +136,27 @@ while (Nsteps > 0)
         end
     end
     
-    subplot(2,1,1);
-    plot(grid_cells,Ex,grid_cells,def_structure,'--');
-    xlabel('FDTD cells');
-    ylabel('Ex');
-    subplot(2,1,2);
-    plot(grid_cells,Hy,grid_cells,def_structure,'--');
-    xlabel('FDTD cells');
-    ylabel('Hy');
-    pause(0.2);
-    fprintf('Timestep = %f \n',T);
+subplot(2,1,1);
+plot(grid_cells,Ex,grid_cells,def_structure,'--');
+xlabel('FDTD cells');
+ylabel('Ex');
+subplot(2,1,2);
+plot(grid_cells,Hy,grid_cells,def_structure,'--');
+xlabel('FDTD cells');
+ylabel('Hy');
+pause(0.2);
+fprintf('Timestep = %f \n',T);
+ 
+for m = 1:3
+        amp_in(m) = sqrt(imag_in(m).^2 + real_in(m).^2);
+        phase_in(m) = atan2(imag_in(m),real_in(m)); 
+
+        for k = 1:MaX
+                ampn(m,k) = (1/amp_in(m))*sqrt(real_pt(m,k).^2 + imag_pt(m,k).^2);
+                phasen(m,k) = atan2(imag_pt(m,k),real_pt(m,k))-phase_in(m); 
+        end
 end
+
+end
+
+
