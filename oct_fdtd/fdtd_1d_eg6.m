@@ -3,7 +3,7 @@
 % Verified by: Manjunath Machnoor, University of Southern California
 %% ========================================================================
 
-%% code for 1D FDTD (sinusoidal pulse hitting a lossy dielectric medium-pml boundary condition-using electric flux density)
+%% code for 1D FDTD (gaussian pulse hitting a lossy dielectric medium-pml boundary condition-using electric flux density)
 %% workspace definition
 close all;
 clear all;
@@ -53,7 +53,6 @@ for k = 1:MaX
     Hy(k) = 0;
     Ix(k) = 0;
 end
-
 
 for k = kStart:MaX
     Ga(k) = 1/(eps+((sig*dt)/epsz));

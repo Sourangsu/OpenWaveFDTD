@@ -3,7 +3,7 @@
 % Verified by: Manjunath Machnoor, University of Southern California
 %% ========================================================================
 
-%% code for 1D FDTD (sinusoidal pulse hitting a lossy dielectric medium-pml boundary condition-using electric flux density)
+%% code for 1D FDTD (gaussian pulse hitting a lossy dielectric medium-pml boundary condition-using electric flux density)
 %% Fourier transform to calculate amplitude and phase
 %% workspace definition
 close all;
@@ -74,8 +74,6 @@ end
 for m = 1:3
     arg(m) = 2*pi*dt*freq_in(m);
 end
-
-
 
 for k = kStart:MaX
     Ga(k) = 1/(eps+((sig*dt)/epsz));
