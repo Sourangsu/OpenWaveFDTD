@@ -1,3 +1,8 @@
+%% ========================================================================
+% Written by: Sourangsu Banerji, University of Utah, March 2019 
+% Verified by: Manjunath Machnoor, University of Southern California
+%% ========================================================================
+
 %% code for 1D FDTD (in free space)
 %% workspace definition
 close all;
