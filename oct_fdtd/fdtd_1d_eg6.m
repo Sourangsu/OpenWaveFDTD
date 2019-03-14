@@ -3,7 +3,7 @@
 % Verified by: Manjunath Machnoor, University of Southern California
 %% ========================================================================
 
-%% code for 1D FDTD (pulse hitting a dielectric medium-pml boundary condition)
+%% code for 1D FDTD (sinusoidal pulse hitting a lossy dielectric medium-pml boundary condition-using electric flux density)
 %% workspace definition
 close all;
 clear all;
@@ -14,11 +14,17 @@ MaX = 200;                                                                 %numb
 
 %material definition
 eps = 4;                                                                   %relative permittivity of material
+epsz = 8.85419e-12;                                                        
+sig = 0.04;                                                                %conductivity of the material
 
 %source definition
-kStart = 100;
-to = 40;                                                                   %center of the incident pulse
-spread = 12;                                                               %width of the incident pulse
+pi = 3.14159;
+kStart = 100;                                                              %start of the structure
+to = 50;                                                                   %center of the incident pulse
+spread = 20;                                                               %width of the incident pulse
+ddx = 0.01;                                                                %spatial sampling
+dt = ddx/(2*3e8);                                                          %temporal interval (could be derived from courant stability factor)
+freq_in = 300*1e6;                                                         %frequency of the excitation pulse
 pulse_start_grid_point = 5;                                                %grid point of the excitation pulse
 
 %structure definition
@@ -37,21 +43,24 @@ Nsteps = 1;
 %%field definition
 Ex = zeros(1,MaX);                                                         %electric field
 Hy = zeros(1,MaX);                                                         %magnetic field
-cB = zeros(1,MaX);                                                         
-
+cB = zeros(1,MaX); 
+cA = zeros(1,MaX);                                                         
 
 for k = 1:MaX
+    Ga(k) = 1;
+    Gb(k) = 0;
     Ex(k) = 0;
+    Dx(k) = 0;
     Hy(k) = 0;
+    Ix(k) = 0;
 end
 
-for k = 1:MaX
-    cB(k) = 0.5;
-end
 
 for k = kStart:MaX
-    cB(k) = 0.5/eps;
+    Ga(k) = 1/(eps+((sig*dt)/epsz));
+    Gb(k) = (sig*dt)/epsz;
 end
+
 
 %% Warning!! Don't change code from here!!
 while (Nsteps > 0)
@@ -63,15 +72,20 @@ while (Nsteps > 0)
         
         %calculate the Ex field
         for k = 2:MaX
-            Ex(k) = Ex(k) + cB(k)*(Hy(k-1)-Hy(k));
+            Dx(k) = Dx(k) + 0.5*(Hy(k-1)-Hy(k));
         end
             
-        %put gaussian pulse in the middle
-        pulse =  exp(-0.5*((to-T)/spread)^2);
-        Ex(pulse_start_grid_point) = Ex(pulse_start_grid_point)+pulse;
-
+        %put pulse in the specified grid position
+        pulse =  sin(2*pi*freq_in*dt*T);
+        Dx(pulse_start_grid_point) = Dx(pulse_start_grid_point)+pulse;
         
-        %%PML boundary condition
+        %calculate Ex from Dx
+        for k = 1:MaX-1
+            Ex(k) = Ga(k)*(Dx(k)-Ix(k));
+            Ix(k) = Ix(k)+(Gb(k)*Ex(k));
+        end
+        
+        %PML boundary condition
         Ex(1) = Ex_low_m2;
         Ex_low_m2 = Ex_low_m1;
         Ex_low_m1 = Ex(2);

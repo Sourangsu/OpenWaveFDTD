@@ -19,11 +19,10 @@ sig = 0.04;                                                                %cond
 
 %source definition
 kStart = 100;                                                              %start of the structure
-kc = MaX/2;                                                                %center of the problem space
 to = 40;                                                                   %center of the incident pulse
 spread = 12;                                                               %width of the incident pulse
 ddx = 0.01;                                                                %spatial sampling
-dt = ddx/(2*3e8);                                                          %temporal time internal (could be derived from courant stability factor)
+dt = ddx/(2*3e8);                                                          %temporal interval (could be derived from courant stability factor)
 freq_in = 700*1e6;                                                         %frequency of the excitation pulse
 pulse_start_grid_point = 5;                                                %grid point of the excitation pulse
 
