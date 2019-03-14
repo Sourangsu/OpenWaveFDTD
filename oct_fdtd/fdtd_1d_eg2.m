@@ -4,22 +4,26 @@ close all;
 clear all;
 clc;
 
+%%parameter definition (material - source - structure definition - boundary condition)
 MaX = 200;                                                                 %number of cells to be used
+
+%source definition
+kc = MaX/2;                                                                %center of the problem space
+to = 40;                                                                   %center of the incident pulse
+spread = 12;                                                               %width of the incident pulse
+
+%boundary condition
 Ex_low_m1 = 0;
 Ex_low_m2 = 0;
 Ex_high_m1 = 0;
 Ex_high_m2 = 0;
-kc = MaX/2;                                                                %center of the problem space
-to = 40;                                                                   %center of the incident pulse
-spread = 12;                                                               %width of the incident pulse
+
 T = 0;
 Nsteps = 1;
-
 
 %%field definition
 Ex = zeros(1,MaX);                                                         %electric field
 Hy = zeros(1,MaX);                                                         %magnetic field
-
 
 for k = 1:MaX
     Ex(k) = 0;
@@ -27,6 +31,7 @@ for k = 1:MaX
 end
 
 
+%% Warning!! Don't change code from here!!
 while (Nsteps > 0)
     n = 0;
     
@@ -42,7 +47,6 @@ while (Nsteps > 0)
         %put gaussian pulse in the middle
         pulse =  exp(-0.5*((to-T)/spread)^2);
         Ex(kc) = Ex(kc)+pulse;
-        %fprintf('%f %f \n',(to-T),Ex(kc));
         
         %%PML boundary condition
         Ex(1) = Ex_low_m2;

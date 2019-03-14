@@ -4,35 +4,42 @@ close all;
 clear all;
 clc;
 
+%%parameter definition (material - source - structure definition - boundary condition)
 MaX = 200;                                                                 %number of cells to be used
 
-Ex_low_m1 = 0;
-Ex_low_m2 = 0;
-Ex_high_m1 = 0;
-Ex_high_m2 = 0;
-eps = 4;
-epsz = 8.85419e-12;
-sig = 0.04;
-kStart = 100;
+%material definition
+eps = 4;                                                                   %relative permittivity of material
+epsz = 8.85419e-12;                                                        
+sig = 0.04;                                                                %conductivity of the material
+
+%source definition
+kStart = 100;                                                              %start of the structure
 kc = MaX/2;                                                                %center of the problem space
 to = 40;                                                                   %center of the incident pulse
 spread = 12;                                                               %width of the incident pulse
+ddx = 0.01;                                                                %spatial sampling
+dt = ddx/(2*3e8);                                                          %temporal time internal (could be derived from courant stability factor)
+freq_in = 700*1e6;                                                         %frequency of the excitation pulse
+pulse_start_grid_point = 5;                                                %grid point of the excitation pulse
+
+%structure definition
+def_structure = [zeros(1,(MaX)/2),ones(1,(MaX)/2)];
+grid_cells = linspace(1,MaX,MaX);
+
+%boundary condition
+Ex_low_m1 = 0;                                                             %leftmost boundary condition
+Ex_low_m2 = 0;                                                             %leftmost boundary condition
+Ex_high_m1 = 0;                                                            %rightmost boundary condition
+Ex_high_m2 = 0;                                                            %rightmost boundary condition
+
 T = 0;
 Nsteps = 1;
-def_structure = [zeros(1,100),ones(1,100)];
-grid_cells = linspace(1,200,200);
-ddx = 0.01;
-dt = ddx/(2*3e8);
-freq_in = 700*1e6;
-
-
 
 %%field definition
 Ex = zeros(1,MaX);                                                         %electric field
 Hy = zeros(1,MaX);                                                         %magnetic field
 cB = zeros(1,MaX); 
 cA = zeros(1,MaX);                                                         
-
 
 for k = 1:MaX
     Ex(k) = 0;
@@ -52,6 +59,7 @@ for k = kStart:MaX
 end
 
 
+%% Warning!! Don't change code from here!!
 while (Nsteps > 0)
     n = 0;
     
@@ -64,12 +72,11 @@ while (Nsteps > 0)
             Ex(k) = cA(k)*Ex(k) + cB(k)*(Hy(k-1)-Hy(k));
         end
             
-        %put gaussian pulse in the middle
+        %put pulse in the specified grid position
         pulse =  sin(2*pi*freq_in*dt*T);
-        Ex(5) = Ex(5)+pulse;
-        %fprintf('%f %f \n',(to-T),Ex(kc));
+        Ex(pulse_start_grid_point) = Ex(pulse_start_grid_point)+pulse;
         
-        %%PML boundary condition
+        %PML boundary condition
         Ex(1) = Ex_low_m2;
         Ex_low_m2 = Ex_low_m1;
         Ex_low_m1 = Ex(2);
