@@ -5,7 +5,7 @@ If you plan to use this code for your project or work then please don't forget t
 
 Publications to cite:
 =======================
-1. S. Banerji, B. Sensale-Rodriguez, “A Computational Design Framework for Efficient, Fabrication Error Tolerant, Planar THz Diffractive Optical Elements.” Scientific Reports, 9, 5801 (2019).
+1. S. Banerji, and B. Sensale-Rodriguez, “A Computational Design Framework for Efficient, Fabrication Error Tolerant, Planar THz Diffractive Optical Elements.” Scientific Reports, 9, 5801 (2019).
 
 2. S. Banerji, M. Meem, B. Sensale-Rodriguez and R. Menon, “Imaging with flat optics: metalenses or diffractive lenses?” arXiv preprint arXiv: 1901.05042 (2018)
 
