@@ -3,7 +3,7 @@
 % Verified by: Manjunath Machnoor, University of Southern California
 %% ========================================================================
 
-%% code for 2D FDTD (TM mode  plane wave propagation-pml boundary condition)
+%% code for 2D FDTD (TM mode plane wave propagation-pml boundary condition)
 %% workspace definition
 close all;
 clear all;
@@ -142,27 +142,19 @@ while (Nsteps > 0)
             dz(i,ja) = dz(i,ja) + (0.5*hx_inc(ja-1));
             dz(i,jb) = dz(i,jb) + (0.5*hx_inc(jb));
         end
-            
+        
             
         %calculate Ez field
-        for j = 1:JE
-            for i = 1:IE
-                ez(i,j) = ga(i,j) * dz(i,j);
+        for j = 2:JE-1
+            for i = 2:IE-1
+                ez(i,j) = ga(i,j) * (dz(i,j) - iz(i,j));
+                iz(i,j) = iz(i,j) + gb(i,j)*ez(i,j);
             end
         end
         
-        %set the Ez edges to 0 as part of the PML
-        for j = 1:JE-1
-            ez(1,j) = 0;
-            ez(IE-1,j) = 0;
-        end
+       
         
-        for i = 1:IE-1
-            ez(i,1) = 0;
-            ez(i,JE-1) = 0;
-        end
-        
-        for j = 1:JE-1
+        for j = 1:JE
             hx_inc(j) = hx_inc(j) + 0.5*(ez_inc(j)-ez_inc(j+1));
         end
         

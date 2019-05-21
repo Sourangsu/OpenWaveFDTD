@@ -3,7 +3,7 @@
 % Verified by: Manjunath Machnoor, University of Southern California
 %% ========================================================================
 
-%% code for 2D FDTD (TM mode wave propagation-PML boundary condition)
+%% code for 2D FDTD (TM mode plane wave propagation impinging on a dielectric cylinder-pml boundary condition)
 %% workspace definition
 close all;
 clear all;
@@ -12,6 +12,7 @@ clc;
 %%parameter definition (material - source - structure definition - boundary condition)
 IE = 60;                                                                   %number of cells to be used
 JE = 60;                                                                   %number of cells to be used
+NFREQS = 3;
 
 %material definition
 epsz = 8.85419e-12;
@@ -19,14 +20,55 @@ epsz = 8.85419e-12;
 %source definition
 ic = IE/2;
 jc = JE/2;
+ia = 7;                                                                    %total field/scattered field
+ib = IE-ia-1;                                                              %total field/scattered field
+ja = 7;                                                                    %total field/scattered field
+jb = JE-ja-1;                                                              %total field/scattered field
 pi = 3.14159;
-to = 40;                                                                   %center of the incident pulse
-spread = 15;                                                               %width of the incident pulse
+to = 25;                                                                   %center of the incident pulse
+spread = 8;                                                                %width of the incident pulse
 ddx = 0.01;                                                                %spatial sampling
 dt = ddx/(2*3e8);                                                          %temporal interval (could be derived from courant stability factor)
 
 T = 0;
 Nsteps = 1;
+
+ez_inc = zeros(JE,1);
+hx_inc = zeros(JE,1);
+
+freq(1) = 50e6;
+freq(2) = 300e-6;
+freq(3) = 700e-6;
+
+for n = 1:NFREQS
+    arg(n) = 2*pi*freq(n)*dt;
+end
+
+%specifiy the structure
+prompt = 'What is the cylinder radius? ';
+radius = input(prompt);
+prompt = 'What is the material epsilon?  ';
+epsilon = input(prompt);
+prompt = 'What is the material sigma? ';
+sigma = input(prompt);
+
+for j = ja:jb
+    for i = ia:ib
+        xdist = (ic-i);
+        ydist = (jc-j);
+        dist = sqrt(xdist^2 + ydist^2);
+        if(dist <= radius)
+            ga(i,j) = 1/(epsilon + (sigma*(dt/epsz)));
+            gb(i,j) = sigma*(dt/epsz);
+        end
+    end
+end
+
+%boundary condition
+ez_inc_low_m1 = 0;
+ez_inc_low_m2 = 0;
+ez_inc_high_m1 = 0;
+ez_inc_high_m2 = 0;
 
 for j = 1:JE
     for i = 1:IE
@@ -96,6 +138,7 @@ for j = 1:npml
     fj3(JE-2-j) = (1-xn)/(1+xn);
 end
 
+
 %% Warning!! Don't change code from here!!
 while (Nsteps > 0)
     n = 0;
@@ -104,7 +147,18 @@ while (Nsteps > 0)
         T =T+1;                                                            %T keeps track of the timesteps
         %main fdtd loop
         
-        %calculate the Dz field
+        %calculate the incident Ez field
+        for j = 2:JE
+                ez_inc(j) = ez_inc(j) + 0.5*(hx_inc(j-1)-hx_inc(j));
+        end
+        
+        %fourier transform of the incident field
+        for m =1:NFREQS
+            real_in(m) = real_in(m) + cos(arg(m)*T)*ez_inc(ja-1);
+            imag_in(m) = real_in(m) - sin(arg(m)*T)*ez_inc(ja-1);
+        end
+        
+       %calculate the Dz field values
         for j = 2:IE
             for i = 2:IE
                 dz(i,j) = gi3(i)*gj3(j)*dz(i,j) + gi2(i)*gj2(j)*0.5*(hy(i,j)-hy(i-1,j)-hx(i,j)+hx(i,j-1));
@@ -112,12 +166,18 @@ while (Nsteps > 0)
         end
         
         %put pulse in the specified grid position
-        pulse =  sin(2*pi*1500*1e6*dt*T);
-        dz(ic,jc) = pulse;
+        pulse =  exp(-0.5*((to-T)/spread)^2);
+        ez_inc(3) = pulse;
         
-        %calculate Ez from Dz
-        for j = 2:JE
-            for i = 2:IE
+        %calculate incident Dz values
+        for i = ia:ib
+            dz(i,ja) = dz(i,ja) + (0.5*hx_inc(ja-1));
+            dz(i,jb) = dz(i,jb) + (0.5*hx_inc(jb));
+        end
+            
+        %calculate Ez field
+        for j = 1:JE
+            for i = 1:IE
                 ez(i,j) = ga(i,j) * dz(i,j);
             end
         end
@@ -133,6 +193,10 @@ while (Nsteps > 0)
             ez(i,JE-1) = 0;
         end
         
+        for j = 1:JE-1
+            hx_inc(j) = hx_inc(j) + 0.5*(ez_inc(j)-ez_inc(j+1));
+        end
+        
         %calculate the Hx field
         for j = 1:JE-1
             for i = 1:IE-1
@@ -140,6 +204,12 @@ while (Nsteps > 0)
                 ihx(i,j) = ihx(i,j) + fi1(i)*curl_e;
                 hx(i,j) = fj3(j)*hx(i,j) + fj2(j)*0.5*(curl_e + ihx(i,j));
             end
+        end
+        
+        %incident Hx field values
+        for i = ia:ib
+            hx(i,ja-1) = hx(i,ja-1) + 0.5*ez_inc(ja);
+            hx(i,jb) = hx(i,jb) - 0.5*ez_inc(jb);
         end
         
         %calculate the Hy field
@@ -150,7 +220,15 @@ while (Nsteps > 0)
                 hx(i,j) = fj3(i)*hy(i,j) + fi2(i)*0.5*(curl_e + ihy(i,j));
             end
         end
+        
+        %incident Hy field values
+        for i = ja:jb
+            hy(ia-1,j) = hy(ia-1,j) - 0.5*ez_inc(j);
+            hy(ib,j) = hy(ib,j) + 0.5*ez_inc(j);
+        end
+        
     end
+    
     
     pause(0.2);
     fprintf('Timestep = %f \n',T);
