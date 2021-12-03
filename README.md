@@ -5,37 +5,37 @@ If you plan to use this code for your project or work then please don't forget t
 
 1D FDTD examples
 --------------------
-Example 1: code for 1D FDTD (in free space)
+**Example 1:** code for 1D FDTD (in free space)
 
-Example 2: code for 1D FDTD (in free space-PML boundary condition)
+**Example 2:** code for 1D FDTD (in free space-PML boundary condition)
 
-Example 3: code for 1D FDTD (pulse hitting a dielectric medium-pml boundary condition)
+**Example 3:** code for 1D FDTD (pulse hitting a dielectric medium-pml boundary condition)
 
-Example 4: code for 1D FDTD (sinusoidal pulse hitting a dielectric medium-pml boundary condition)
+**Example 4:** code for 1D FDTD (sinusoidal pulse hitting a dielectric medium-pml boundary condition)
 
-Example 5: code for 1D FDTD (gaussian pulse hitting a lossy dielectric medium-pml boundary condition-using electric flux density)
+**Example 5:** code for 1D FDTD (gaussian pulse hitting a lossy dielectric medium-pml boundary condition-using electric flux density)
 
-Example 6: code for 1D FDTD (gaussian pulse hitting a lossy dielectric medium-pml boundary condition-using electric flux density) (Fourier transform to calculate amplitude and phase)
+**Example 6:** code for 1D FDTD (gaussian pulse hitting a lossy dielectric medium-pml boundary condition-using electric flux density) (Fourier transform to calculate amplitude and phase)
 
-Example 7: code for 1D FDTD (gaussian pulse hitting a lossy dielectric medium-pml boundary condition-using electric flux density) (Fourier transform to calculate amplitude and phase - Frequency dependent material)
+**Example 7:** code for 1D FDTD (gaussian pulse hitting a lossy dielectric medium-pml boundary condition-using electric flux density) (Fourier transform to calculate amplitude and phase - Frequency dependent material)
 
-Example 8: code for 1D FDTD (sinusoidal pulse hitting a lossy dielectric medium-pml boundary condition-using electric flux density)
+**Example 8:** code for 1D FDTD (sinusoidal pulse hitting a lossy dielectric medium-pml boundary condition-using electric flux density)
 
-Example 9: code for 1D FDTD (sinusoidal pulse hitting a lossy dielectric medium-pml boundary condition-using electric flux density) (Fourier transform to calculate amplitude and phase)
+**Example 9:** code for 1D FDTD (sinusoidal pulse hitting a lossy dielectric medium-pml boundary condition-using electric flux density) (Fourier transform to calculate amplitude and phase)
 
-Example 10: code for 1D FDTD (sinusoidal pulse hitting a lossy dielectric medium-pml boundary condition-using electric flux density) (Fourier transform to calculate amplitude and phase - Frequency dependent material)
+**Example 10:** code for 1D FDTD (sinusoidal pulse hitting a lossy dielectric medium-pml boundary condition-using electric flux density) (Fourier transform to calculate amplitude and phase - Frequency dependent material)
 
 
 
 2D FDTD examples
 --------------------
-Example 1: code for 2D FDTD (TM mode wave propagation)
+**Example 1:** code for 2D FDTD (TM mode wave propagation)
 
-Example 2: code for 2D FDTD (TM mode wave propagation-PML boundary condition)
+**Example 2:** code for 2D FDTD (TM mode wave propagation-PML boundary condition)
 
-Example 3: code for 2D FDTD (TM mode plane wave propagation-pml boundary condition)
+**Example 3:** code for 2D FDTD (TM mode plane wave propagation-pml boundary condition)
 
-Example 4: code for 2D FDTD (TM mode plane wave propagation impinging on a dielectric cylinder-pml boundary condition)
+**Example 4:** code for 2D FDTD (TM mode plane wave propagation impinging on a dielectric cylinder-pml boundary condition)
 
 
 
