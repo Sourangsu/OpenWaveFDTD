@@ -31,7 +31,7 @@ If you plan to use this code for your project or work then please don't forget t
 --------------------
 **Example 1:** code for 2D FDTD (TM mode wave propagation)
 
-**Example 2:** code for 2D FDTD (TM mode wave propagation-PML boundary condition)
+**Example 2:** code for 2D FDTD (TM mode wave propagation-pml boundary condition)
 
 **Example 3:** code for 2D FDTD (TM mode plane wave propagation-pml boundary condition)
 
