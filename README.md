@@ -1,8 +1,5 @@
 # osfdtd
 
-If you plan to use this code for your project or work then please don't forget to cite the following papers as refernce to this. It is always a good gesture to give due credit to the creators of any work. 
-
-
 1D FDTD examples
 --------------------
 **Example 1:** code for 1D FDTD (in free space)
@@ -38,12 +35,11 @@ If you plan to use this code for your project or work then please don't forget t
 **Example 4:** code for 2D FDTD (TM mode plane wave propagation impinging on a dielectric cylinder-pml boundary condition)
 
 
+If you plan to use this code for your project or work then please don't forget to cite the following papers as reference to this. It is always a good gesture to give due credit to the orginal creators of the work. :) 
 
 publications to cite:
 =======================
 1. S. Banerji, and B. Sensale-Rodriguez, “A Computational Design Framework for Efficient, Fabrication Error Tolerant, Planar THz Diffractive Optical Elements.” Scientific Reports, 9, 5801 (2019).
-
-2. S. Banerji, M. Meem, A. Majumder, F.G. Vasquez, B. Sensale-Rodriguez and R. Menon, “Imaging with flat optics: metalenses or diffractive lenses?” Optica 6(6), 805 (2019).
 
 Thank You! 
 
