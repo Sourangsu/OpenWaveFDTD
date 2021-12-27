@@ -35,10 +35,10 @@
 **Example 4:** code for 2D FDTD (TM mode plane wave propagation impinging on a dielectric cylinder-pml boundary condition)
 
 
-If you plan to use this code for your project or work then please don't forget to cite the following papers as reference to this. It is always a good gesture to give due credit to the orginal creators of the work. :) 
-
 publications to cite:
 =======================
+If you plan to use this code for your project or work then please don't forget to cite the following papers as reference to this. It is always a good gesture to give due credit to the orginal creators of the work. :) 
+
 1. S. Banerji, and B. Sensale-Rodriguez, “A Computational Design Framework for Efficient, Fabrication Error Tolerant, Planar THz Diffractive Optical Elements.” Scientific Reports, 9, 5801 (2019).
 
 Thank You! 
