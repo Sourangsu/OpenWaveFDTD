@@ -1,4 +1,4 @@
-# osfdtd
+# OpenWaveFDTD
 
 1D FDTD examples
 --------------------
