@@ -1,7 +1,6 @@
 # OpenWaveFDTD
 
-1D FDTD examples
---------------------
+## 1D FDTD examples
 **Example 1:** code for 1D FDTD (in free space)
 
 **Example 2:** code for 1D FDTD (in free space-PML boundary condition)
@@ -24,8 +23,7 @@
 
 
 
-2D FDTD examples
---------------------
+## 2D FDTD examples
 **Example 1:** code for 2D FDTD (TM mode wave propagation)
 
 **Example 2:** code for 2D FDTD (TM mode wave propagation-pml boundary condition)
